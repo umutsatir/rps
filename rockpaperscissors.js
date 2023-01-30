@@ -1,56 +1,52 @@
-// write all the moves into an array and declare variables
+// declaring variables
 let moves = ["rock", "paper", "scissors"];
 let computerWin = 0;
 let playerWin = 0;
+let result = document.querySelector("#result");
+let score = document.querySelector("#score");
 
 // create a function that creates computer selection
 function computerPlay() {
     return moves[Math.floor(Math.random() * moves.length)];
 }
 
-// create a function that receives player selection
-function playerPlay() {
-    let userChoice = prompt("Please write your move: ");
-    for (let i = 0; i < moves.length; i++) {
-        if (userChoice == moves[i]){
-            return userChoice;
-        }
-    }
-    alert("Wrong typo, please type again: ");
-    playerPlay();
-}
-
 // create a function that plays a round
-function playRound() {
-    let playerSelection = playerPlay();
-    let computerSelection = computerPlay();
+function playRound(playerSelection, computerSelection) {
     if (playerSelection == computerSelection){
-        alert("Tie!");
+        result.textContent = "It's a tie!You selected " + playerSelection + " and computer selected " + computerSelection + ".";
     }
     else if ((playerSelection == "rock" && computerSelection == "scissors") || (playerSelection == "paper" && computerSelection == "rock") || (playerSelection == "scissors" && computerSelection == "paper")){
         playerWin++;
-        alert("Player win! Player selected " + playerSelection + " and computer selected " + computerSelection + ". Current situation = Computer:" + computerWin + ", Player:" + playerWin);
+        result.textContent = "You win! You selected " + playerSelection + " and computer selected " + computerSelection + ".";
     }
     else{
         computerWin++;
-        alert("Player lose! Player selected " + playerSelection + " and computer selected " + computerSelection + ". Current situation = Computer:" + computerWin + ", Player:" + playerWin);
+        result.textContent = "You lose! You selected " + playerSelection + " and computer selected " + computerSelection + ".";
     }
+    score.textContent = "Player: " + playerWin + " Computer: " + computerWin;
 }
 
-// create a function that receives how many rounds to play and runs the round function that many times
-function play(){
-    computerWin = 0;
+// create a function that restarts the game
+function restart(){
     playerWin = 0;
-    while (playerWin != 5 && computerWin != 5){
-        playRound();
-    }
-    if (playerWin == 5){
-        alert("Player win!");
-    }
-    else if (computerWin == 5){
-        alert("Computer win!");
-    }
+    computerWin = 0;
+    score.textContent = "Player: " + playerWin + " Computer: " + computerWin;
+    result.textContent = "";
 }
 
 // run the function
-play();
+let buttons = document.querySelectorAll("button");
+    buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+            playRound(button.id, computerPlay());
+            if (playerWin == 5){
+                alert("Player win!");
+                restart();
+
+            }
+            else if (computerWin == 5){
+                alert("Computer win!");
+                restart();
+            }
+        });
+});
